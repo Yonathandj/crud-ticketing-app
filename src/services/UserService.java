@@ -7,6 +7,9 @@ import java.sql.*;
 import java.util.UUID;
 
 public class UserService implements UserServiceImplementation {
+    public UserService() {
+    }
+
     public String addNewUserService(String name, String phoneNumber, String email, String address) {
         try(Connection connection = ConnectDatabase.connectDB()) {
             assert connection != null;

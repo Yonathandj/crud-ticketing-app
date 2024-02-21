@@ -7,6 +7,10 @@ import implementations.controllers.TicketControllerImplementation;
 import services.TicketService;
 public class TicketController implements TicketControllerImplementation {
     private final TicketService ts = new TicketService();
+
+    public TicketController() {
+    }
+
     public static void run() {
         Scanner scanner = new Scanner(System.in);
         TicketController tc = new TicketController();

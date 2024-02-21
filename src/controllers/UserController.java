@@ -8,6 +8,10 @@ import java.sql.ResultSet;
 
 public class UserController implements UserControllerImplementation {
     private final UserService us = new UserService();
+
+    public UserController() {
+    }
+
     public static void run() {
         Scanner scanner = new Scanner(System.in);
         UserController uc = new UserController();

@@ -9,6 +9,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class TicketService implements TicketServiceImplementation {
+    public TicketService() {
+    }
+
     public String addNewTicketService(String concertName, String venue, String date, String organizer, double price, double discount) {
         try(Connection connection = ConnectDatabase.connectDB()) {
             assert connection != null;
