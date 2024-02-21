@@ -15,7 +15,7 @@ public class TicketService {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO tickets (id, concert_name, venue, concert_date, organizer, ticket_code, price, discount) VALUES(?, ? ,? ,? , ?, ? ,? ,?)");
 
             String id = "ticket-" + UUID.randomUUID();
-            String ticketCode = "ticketCode" + UUID.randomUUID();
+            String ticketCode = "ticket-code-" + UUID.randomUUID();
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate newDate = LocalDate.parse(date, formatter);
