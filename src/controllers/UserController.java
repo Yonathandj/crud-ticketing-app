@@ -68,10 +68,11 @@ public class UserController {
         try {
             ResultSet rs = us.getAllUsers();
             while(rs.next()) {
-                System.out.printf("%-10s", rs.getString("name"));
-                System.out.printf("%-10s", rs.getString("phone_number"));
-                System.out.printf("%-10s", rs.getString("email"));
-                System.out.printf("%-10s", rs.getString("address"));
+                System.out.printf("%-25s", rs.getString("name"));
+                System.out.printf("%-25s", rs.getString("phone_number"));
+                System.out.printf("%-25s", rs.getString("email"));
+                System.out.printf("%-25s", rs.getString("address"));
+                System.out.println();
             }
         } catch (Exception err) {
             System.out.println(err.getMessage());
@@ -85,10 +86,11 @@ public class UserController {
 
             ResultSet rs = us.getUserByIdService(id);
             while(rs.next()) {
-                System.out.printf("%-10s", rs.getString("name"));
-                System.out.printf("%-10s", rs.getString("phone_number"));
-                System.out.printf("%-10s", rs.getString("email"));
-                System.out.printf("%-10s", rs.getString("address"));
+                System.out.printf("%-25s", rs.getString("name"));
+                System.out.printf("%-25s", rs.getString("phone_number"));
+                System.out.printf("%-25s", rs.getString("email"));
+                System.out.printf("%-25s", rs.getString("address"));
+                System.out.println();
             }
         } catch (Exception err) {
             System.out.println(err.getMessage());
