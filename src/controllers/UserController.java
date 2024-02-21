@@ -7,13 +7,15 @@ public class UserController {
         Scanner scanner = new Scanner(System.in);
         UserController uc = new UserController();
 
-        System.out.println("Add new user (1)");
-        System.out.println("Get all users (2)");
-        System.out.println("Get user by id (3)");
-        System.out.println("Update user by id (4)");
-        System.out.println("Delete user by id (5)");
+        System.out.println("==========================");
+        System.out.println("Add new user        -> (1)");
+        System.out.println("Get all users       -> (2)");
+        System.out.println("Get user by id      -> (3)");
+        System.out.println("Update user by id   -> (4)");
+        System.out.println("Delete user by id   -> (5)");
 
         int choice = scanner.nextInt();
+        scanner.close();
 
         switch (choice) {
             case 1:

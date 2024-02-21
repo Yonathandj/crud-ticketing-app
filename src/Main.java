@@ -1,5 +1,5 @@
-import controllers.TicketController;
 import controllers.UserController;
+import controllers.TicketController;
 
 import java.util.Scanner;
 
@@ -14,8 +14,7 @@ public class Main {
             int choice = scanner.nextInt();
             if(choice == 1) {
                 TicketController.run();
-            }
-            if(choice == 2) {
+            } else if(choice == 2) {
                 UserController.run();
             }
 
