@@ -64,6 +64,34 @@ public class TicketService {
         }
     }
 
+    public ResultSet getTicketByConcertName(String concertName) {
+        try(Connection connection = ConnectDatabase.connectDB()) {
+            assert connection != null;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets WHERE concertName = ?");
+            ps.setString(1, concertName);
+
+            return ps.executeQuery();
+        } catch (SQLException err) {
+            throw new RuntimeException("Something went wrong");
+        }
+    }
+
+    public ResultSet getTicketByDate(String date) {
+        try(Connection connection = ConnectDatabase.connectDB()) {
+            assert connection != null;
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate newDate = LocalDate.parse(date, formatter);
+
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets WHERE concert_date = ?");
+            ps.setDate(1, Date.valueOf(newDate));
+
+            return ps.executeQuery();
+        } catch (SQLException err) {
+            throw new RuntimeException("Something went wrong");
+        }
+    }
+
     public int updateTicketService(String id, String concertName, String venue, String date, String organizer, double price, double discount) {
         try(Connection connection = ConnectDatabase.connectDB()) {
             assert connection != null;

@@ -14,8 +14,10 @@ public class TicketController {
         System.out.println("Add new ticket       -> (1)");
         System.out.println("Get all tickets      -> (2)");
         System.out.println("Get ticket by id     -> (3)");
-        System.out.println("Update ticket by id  -> (4)");
-        System.out.println("Delete ticket by id  -> (5)");
+        System.out.println("Get ticket by concert name  -> (4)");
+        System.out.println("Get ticket by date   -> (5)");
+        System.out.println("Update ticket by id  -> (6)");
+        System.out.println("Delete ticket by id  -> (7)");
 
         int choice = scanner.nextInt();
         scanner.nextLine();
@@ -31,9 +33,15 @@ public class TicketController {
                 tc.getTicketById(scanner);
                 break;
             case 4:
-                tc.putTicketById(scanner);
+                tc.getTicketByConcertName(scanner);
                 break;
             case 5:
+                tc.getTicketByDate(scanner);
+                break;
+            case 6:
+                tc.putTicketById(scanner);
+                break;
+            case 7:
                 tc.deleteTicketById(scanner);
                 break;
             default:
@@ -84,6 +92,44 @@ public class TicketController {
     }
 
     public void getTicketById(Scanner scanner) {
+        try {
+            System.out.println("Enter the ticket id");
+            String id = scanner.nextLine();
+
+            ResultSet rs = ts.getTicketByIdService(id);
+            while(rs.next()) {
+                System.out.printf("%-10s", rs.getString("concert_name"));
+                System.out.printf("%-10s", rs.getString("venue"));
+                System.out.printf("%-10s", rs.getDate("concert_date"));
+                System.out.printf("%-10s", rs.getString("concert_name"));
+                System.out.printf("%-10s", rs.getString("organizer"));
+                System.out.printf("%-10s", rs.getString("ticket_code"));
+            }
+        } catch (Exception err) {
+            System.out.println(err.getMessage());
+        }
+    }
+
+    public void getTicketByConcertName(Scanner scanner) {
+        try {
+            System.out.println("Enter the concert name");
+            String concertName = scanner.nextLine();
+
+            ResultSet rs = ts.getTicketByIdService(concertName);
+            while(rs.next()) {
+                System.out.printf("%-10s", rs.getString("concert_name"));
+                System.out.printf("%-10s", rs.getString("venue"));
+                System.out.printf("%-10s", rs.getDate("concert_date"));
+                System.out.printf("%-10s", rs.getString("concert_name"));
+                System.out.printf("%-10s", rs.getString("organizer"));
+                System.out.printf("%-10s", rs.getString("ticket_code"));
+            }
+        } catch (Exception err) {
+            System.out.println(err.getMessage());
+        }
+    }
+
+    public void getTicketByDate(Scanner scanner) {
         try {
             System.out.println("Enter the ticket id");
             String id = scanner.nextLine();
