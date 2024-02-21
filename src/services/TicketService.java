@@ -1,13 +1,14 @@
 package services;
 
 import connection.ConnectDatabase;
+import implementations.services.TicketServiceImplementation;
 
 import java.sql.*;
 import java.util.UUID;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class TicketService {
+public class TicketService implements TicketServiceImplementation {
     public String addNewTicketService(String concertName, String venue, String date, String organizer, double price, double discount) {
         try(Connection connection = ConnectDatabase.connectDB()) {
             assert connection != null;

@@ -3,7 +3,7 @@ package controllers;
 import java.sql.ResultSet;
 import java.util.Scanner;
 
-import implementations.TicketControllerImplementation;
+import implementations.controllers.TicketControllerImplementation;
 import services.TicketService;
 public class TicketController implements TicketControllerImplementation {
     private final TicketService ts = new TicketService();

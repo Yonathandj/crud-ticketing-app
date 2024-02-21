@@ -1,6 +1,6 @@
 package controllers;
 
-import implementations.UserControllerImplementation;
+import implementations.controllers.UserControllerImplementation;
 import services.UserService;
 
 import java.util.Scanner;
@@ -67,7 +67,7 @@ public class UserController implements UserControllerImplementation {
 
     public void getAllUsers() {
         try {
-            ResultSet rs = us.getAllUsers();
+            ResultSet rs = us.getAllUsersService();
             while(rs.next()) {
                 System.out.printf("%-25s", rs.getString("name"));
                 System.out.printf("%-25s", rs.getString("phone_number"));

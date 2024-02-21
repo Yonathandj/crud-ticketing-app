@@ -1,4 +1,4 @@
-package implementations;
+package implementations.controllers;
 
 import java.util.Scanner;
 
