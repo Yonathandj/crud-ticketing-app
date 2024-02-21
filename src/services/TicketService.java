@@ -2,12 +2,9 @@ package services;
 
 import connection.ConnectDatabase;
 
-import java.sql.Date;
+import java.sql.*;
 import java.util.UUID;
 import java.time.LocalDate;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.PreparedStatement;
 import java.time.format.DateTimeFormatter;
 
 public class TicketService {
@@ -33,11 +30,37 @@ public class TicketService {
             ps.setDouble(8, discount);
 
             ps.executeUpdate();
+
+            ps.close();
+            connection.close();
+
             return id;
 
         } catch (SQLException err) {
-            System.out.println(err.getMessage());
+            throw new RuntimeException("Something went wrong");
         }
-        return null;
+    }
+
+    public ResultSet getAllTicketsService() {
+        try(Connection connection = ConnectDatabase.connectDB()) {
+            assert connection != null;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets");
+
+            return ps.executeQuery();
+        } catch (SQLException err) {
+            throw new RuntimeException("Something went wrong");
+        }
+    }
+
+    public ResultSet getTicketByIdService(String id) {
+        try(Connection connection = ConnectDatabase.connectDB()) {
+            assert connection != null;
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets WHERE id = ?");
+            ps.setString(1, id);
+
+            return ps.executeQuery();
+        } catch (SQLException err) {
+            throw new RuntimeException("Something went wrong");
+        }
     }
 }

@@ -1,5 +1,6 @@
 package controllers;
 
+import java.sql.ResultSet;
 import java.util.Scanner;
 
 import services.TicketService;
@@ -24,7 +25,7 @@ public class TicketController {
                 tc.postNewTicket(scanner);
                 break;
             case 2:
-                tc.getAllTickets(scanner);
+                tc.getAllTickets();
                 break;
             case 3:
                 tc.getTicketById(scanner);
@@ -66,12 +67,39 @@ public class TicketController {
         }
     }
 
-    public void getAllTickets(Scanner scanner) {
-
+    public void getAllTickets() {
+        try {
+            ResultSet rs = ts.getAllTicketsService();
+            while(rs.next()) {
+                System.out.printf("%-10s", rs.getString("concert_name"));
+                System.out.printf("%-10s", rs.getString("venue"));
+                System.out.printf("%-10s", rs.getDate("concert_date"));
+                System.out.printf("%-10s", rs.getString("concert_name"));
+                System.out.printf("%-10s", rs.getString("organizer"));
+                System.out.printf("%-10s", rs.getString("ticket_code"));
+            }
+        } catch (Exception err) {
+            System.out.println(err.getMessage());
+        }
     }
 
     public void getTicketById(Scanner scanner) {
+        try {
+            System.out.println("Enter the ticket id");
+            String id = scanner.nextLine();
 
+            ResultSet rs = ts.getTicketByIdService(id);
+            while(rs.next()) {
+                System.out.printf("%-10s", rs.getString("concert_name"));
+                System.out.printf("%-10s", rs.getString("venue"));
+                System.out.printf("%-10s", rs.getDate("concert_date"));
+                System.out.printf("%-10s", rs.getString("concert_name"));
+                System.out.printf("%-10s", rs.getString("organizer"));
+                System.out.printf("%-10s", rs.getString("ticket_code"));
+            }
+        } catch (Exception err) {
+            System.out.println(err.getMessage());
+        }
     }
 
     public void putTicketById(Scanner scanner) {
