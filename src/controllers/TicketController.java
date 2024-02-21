@@ -115,7 +115,7 @@ public class TicketController {
             System.out.println("Enter the concert name");
             String concertName = scanner.nextLine();
 
-            ResultSet rs = ts.getTicketByIdService(concertName);
+            ResultSet rs = ts.getTicketByConcertNameService(concertName);
             while(rs.next()) {
                 System.out.printf("%-10s", rs.getString("concert_name"));
                 System.out.printf("%-10s", rs.getString("venue"));
@@ -131,10 +131,10 @@ public class TicketController {
 
     public void getTicketByDate(Scanner scanner) {
         try {
-            System.out.println("Enter the ticket id");
-            String id = scanner.nextLine();
+            System.out.println("Enter the ticket date");
+            String date = scanner.nextLine();
 
-            ResultSet rs = ts.getTicketByIdService(id);
+            ResultSet rs = ts.getTicketByDateService(date);
             while(rs.next()) {
                 System.out.printf("%-10s", rs.getString("concert_name"));
                 System.out.printf("%-10s", rs.getString("venue"));

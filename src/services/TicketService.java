@@ -35,7 +35,6 @@ public class TicketService {
             connection.close();
 
             return id;
-
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
         }
@@ -55,28 +54,41 @@ public class TicketService {
     public ResultSet getTicketByIdService(String id) {
         try(Connection connection = ConnectDatabase.connectDB()) {
             assert connection != null;
+
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets WHERE id = ?");
             ps.setString(1, id);
+            ResultSet rs =  ps.executeQuery();
 
-            return ps.executeQuery();
+            ps.close();
+            rs.close();
+            connection.close();
+
+            return rs;
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
         }
     }
 
-    public ResultSet getTicketByConcertName(String concertName) {
+    public ResultSet getTicketByConcertNameService(String concertName) {
         try(Connection connection = ConnectDatabase.connectDB()) {
             assert connection != null;
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets WHERE concertName = ?");
+
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets WHERE concert_name = ?");
             ps.setString(1, concertName);
 
-            return ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
+
+            rs.close();
+            ps.close();
+            connection.close();
+
+            return rs;
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
         }
     }
 
-    public ResultSet getTicketByDate(String date) {
+    public ResultSet getTicketByDateService(String date) {
         try(Connection connection = ConnectDatabase.connectDB()) {
             assert connection != null;
 
@@ -86,7 +98,13 @@ public class TicketService {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets WHERE concert_date = ?");
             ps.setDate(1, Date.valueOf(newDate));
 
-            return ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
+
+            ps.close();
+            rs.close();
+            connection.close();
+
+            return rs;
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
         }
@@ -109,15 +127,12 @@ public class TicketService {
             ps.setDouble(6, discount);
             ps.setString(7, id);
 
-
-
             int affectedRow = ps.executeUpdate();
 
             ps.close();
             connection.close();
 
             return affectedRow;
-
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
         }
