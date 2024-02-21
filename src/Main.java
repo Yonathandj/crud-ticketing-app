@@ -1,15 +1,26 @@
-import connection.ConnectDatabase;
+import controllers.TicketController;
+import controllers.UserController;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        try(Connection connection = ConnectDatabase.connectDB()) {
+        Scanner scanner = new Scanner(System.in);
+        try {
+            System.out.println("===========");
+            System.out.println("Ticket -> (1)");
+            System.out.println("User   -> (2)");
 
-            System.out.println("Connected");
-        } catch (SQLException err) {
-            System.out.println(err.getMessage());
+            int choice = scanner.nextInt();
+            if(choice == 1) {
+                TicketController.run();
+            }
+            if(choice == 2) {
+                UserController.run();
+            }
+
+        } catch (Exception err) {
+            System.out.println("Please enter a valid input");
         }
     }
 }
