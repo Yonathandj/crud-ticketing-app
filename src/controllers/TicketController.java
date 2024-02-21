@@ -103,10 +103,22 @@ public class TicketController {
     }
 
     public void putTicketById(Scanner scanner) {
-
     }
 
     public void deleteTicketById(Scanner scanner) {
+        try {
+            System.out.println("Enter the ticket id");
+            String id = scanner.nextLine();
 
+            int affectedRow = ts.deleteTicketByIdService(id);
+            if (affectedRow == 1) {
+                System.out.println("Delete success");
+            } else {
+                System.out.println("Delete failed");
+            }
+
+        } catch (Exception err) {
+            System.out.println(err.getMessage());
+        }
     }
 }

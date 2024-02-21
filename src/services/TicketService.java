@@ -63,4 +63,17 @@ public class TicketService {
             throw new RuntimeException("Something went wrong");
         }
     }
+
+
+    public int deleteTicketByIdService(String id) {
+        try(Connection connection = ConnectDatabase.connectDB()) {
+            assert connection != null;
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM tickets WHERE id = ?");
+            ps.setString(1, id);
+
+            return ps.executeUpdate();
+        } catch (SQLException err) {
+            throw new RuntimeException("Something went wrong");
+        }
+    }
 }
