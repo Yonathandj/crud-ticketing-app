@@ -103,6 +103,35 @@ public class TicketController {
     }
 
     public void putTicketById(Scanner scanner) {
+        try {
+            System.out.println("Enter ticket information for update");
+            System.out.println("1. id ticket");
+            System.out.println("2. Concert name");
+            System.out.println("3. Venue");
+            System.out.println("4. Date");
+            System.out.println("5. Organizer");
+            System.out.println("6. Price");
+            System.out.println("7. Discount");
+
+            String id = scanner.nextLine();
+            String concertName = scanner.nextLine();
+            String venue = scanner.nextLine();
+            String date = scanner.nextLine();
+            String organizer = scanner.nextLine();
+            double price = scanner.nextDouble();
+            double discount = scanner.nextDouble();
+
+            int affectedRow = ts.updateTicketService(id, concertName, venue, date, organizer, price, discount);
+
+            if (affectedRow == 1) {
+                System.out.println("Update success");
+            } else {
+                System.out.println("Update failed");
+            }
+
+        } catch (Exception err) {
+            System.out.println(err.getMessage());
+        }
     }
 
     public void deleteTicketById(Scanner scanner) {

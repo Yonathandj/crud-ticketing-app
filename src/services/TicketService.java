@@ -64,6 +64,36 @@ public class TicketService {
         }
     }
 
+    public int updateTicketService(String id, String concertName, String venue, String date, String organizer, double price, double discount) {
+        try(Connection connection = ConnectDatabase.connectDB()) {
+            assert connection != null;
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate newDate = LocalDate.parse(date, formatter);
+
+            PreparedStatement ps = connection.prepareStatement("UPDATE tickets SET concert_name = ?, venue = ?, concert_date = ?, organizer = ?, price = ?, discount = ? WHERE id = ?");
+
+            ps.setString(1, concertName);
+            ps.setString(2, venue);
+            ps.setDate(3, Date.valueOf(newDate));
+            ps.setString(4, organizer);
+            ps.setDouble(5, price);
+            ps.setDouble(6, discount);
+            ps.setString(7, id);
+
+
+
+            int affectedRow = ps.executeUpdate();
+
+            ps.close();
+            connection.close();
+
+            return affectedRow;
+
+        } catch (SQLException err) {
+            throw new RuntimeException("Something went wrong");
+        }
+    }
 
     public int deleteTicketByIdService(String id) {
         try(Connection connection = ConnectDatabase.connectDB()) {
