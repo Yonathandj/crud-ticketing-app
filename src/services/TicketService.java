@@ -16,15 +16,15 @@ public class TicketService implements TicketServiceImplementation {
         try(Connection connection = ConnectDatabase.connectDB()) {
             assert connection != null;
 
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO tickets (id, concert_name, venue, concert_date, organizer, ticket_code, price, discount) VALUES(?, ? ,? ,? , ?, ? ,? ,?)");
-
-            String id = "ticket-" + UUID.randomUUID();
+            String ticketId = "ticket-" + UUID.randomUUID();
             String ticketCode = "ticket-code-" + UUID.randomUUID();
+
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO tickets (id, concert_name, venue, concert_date, organizer, ticket_code, price, discount) VALUES(?, ? ,? ,? , ?, ? ,? ,?)");
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate newDate = LocalDate.parse(date, formatter);
 
-            ps.setString(1, id);
+            ps.setString(1, ticketId);
             ps.setString(2, concertName);
             ps.setString(3, venue);
             ps.setDate(4, Date.valueOf(newDate));
@@ -34,7 +34,8 @@ public class TicketService implements TicketServiceImplementation {
             ps.setDouble(8, discount);
 
             ps.executeUpdate();
-            return id;
+
+            return ticketId;
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
         }
