@@ -141,10 +141,15 @@ public class TicketService {
     public int deleteTicketByIdService(String id) {
         try(Connection connection = ConnectDatabase.connectDB()) {
             assert connection != null;
+
             PreparedStatement ps = connection.prepareStatement("DELETE FROM tickets WHERE id = ?");
             ps.setString(1, id);
+            int affectedRow = ps.executeUpdate();
 
-            return ps.executeUpdate();
+            ps.close();
+            connection.close();
+
+            return affectedRow;
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
         }

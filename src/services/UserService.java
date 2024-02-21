@@ -12,13 +12,11 @@ public class UserService {
 
             String id = "ticket-" + UUID.randomUUID();
             PreparedStatement ps = connection.prepareStatement("INSERT INTO users (id, name, phone_number, email, address) VALUES(?, ? ,?, ?, ?)");
-
             ps.setString(1, id);
             ps.setString(2, name);
             ps.setString(3, phoneNumber);
             ps.setString(5, email);
             ps.setString(6, address);
-
             ps.executeUpdate();
 
             ps.close();
@@ -35,7 +33,6 @@ public class UserService {
             assert connection != null;
 
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM users");
-
             ResultSet rs = ps.executeQuery();
 
             ps.close();
@@ -54,8 +51,13 @@ public class UserService {
 
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM users WHERE id = ?");
             ps.setString(1, id);
+            ResultSet rs = ps.executeQuery();
 
-            return ps.executeQuery();
+            ps.close();
+            rs.close();
+            connection.close();
+
+            return rs;
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
         }
@@ -66,13 +68,11 @@ public class UserService {
             assert connection != null;
 
             PreparedStatement ps = connection.prepareStatement("UPDATE users SET name = ?, phoneNumber = ?, email = ?, address = ? WHERE id = ?");
-
             ps.setString(1, name);
             ps.setString(2, phoneNumber);
             ps.setString(3, email);
             ps.setString(4, address);
             ps.setString(5, id);
-
             int affectedRow = ps.executeUpdate();
 
             ps.close();
@@ -90,7 +90,6 @@ public class UserService {
 
             PreparedStatement ps = connection.prepareStatement("DELETE FROM users WHERE id = ?");
             ps.setString(1, id);
-
             int affectedRow = ps.executeUpdate();
 
             ps.close();
