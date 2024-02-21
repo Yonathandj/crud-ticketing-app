@@ -30,10 +30,6 @@ public class TicketService {
             ps.setDouble(8, discount);
 
             ps.executeUpdate();
-
-            ps.close();
-            connection.close();
-
             return id;
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
@@ -57,13 +53,8 @@ public class TicketService {
 
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets WHERE id = ?");
             ps.setString(1, id);
-            ResultSet rs =  ps.executeQuery();
 
-            ps.close();
-            rs.close();
-            connection.close();
-
-            return rs;
+            return ps.executeQuery();
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
         }
@@ -76,13 +67,7 @@ public class TicketService {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets WHERE concert_name = ?");
             ps.setString(1, concertName);
 
-            ResultSet rs = ps.executeQuery();
-
-            rs.close();
-            ps.close();
-            connection.close();
-
-            return rs;
+            return ps.executeQuery();
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
         }
@@ -98,13 +83,7 @@ public class TicketService {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets WHERE concert_date = ?");
             ps.setDate(1, Date.valueOf(newDate));
 
-            ResultSet rs = ps.executeQuery();
-
-            ps.close();
-            rs.close();
-            connection.close();
-
-            return rs;
+            return ps.executeQuery();
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
         }
@@ -127,12 +106,7 @@ public class TicketService {
             ps.setDouble(6, discount);
             ps.setString(7, id);
 
-            int affectedRow = ps.executeUpdate();
-
-            ps.close();
-            connection.close();
-
-            return affectedRow;
+            return ps.executeUpdate();
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
         }
@@ -144,12 +118,8 @@ public class TicketService {
 
             PreparedStatement ps = connection.prepareStatement("DELETE FROM tickets WHERE id = ?");
             ps.setString(1, id);
-            int affectedRow = ps.executeUpdate();
 
-            ps.close();
-            connection.close();
-
-            return affectedRow;
+            return ps.executeUpdate();
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
         }

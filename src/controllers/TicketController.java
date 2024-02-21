@@ -79,12 +79,13 @@ public class TicketController {
         try {
             ResultSet rs = ts.getAllTicketsService();
             while(rs.next()) {
-                System.out.printf("%-10s", rs.getString("concert_name"));
-                System.out.printf("%-10s", rs.getString("venue"));
-                System.out.printf("%-10s", rs.getDate("concert_date"));
-                System.out.printf("%-10s", rs.getString("concert_name"));
-                System.out.printf("%-10s", rs.getString("organizer"));
-                System.out.printf("%-10s", rs.getString("ticket_code"));
+                System.out.printf("%-25s", rs.getString("concert_name"));
+                System.out.printf("%-25s", rs.getString("venue"));
+                System.out.printf("%-25s", rs.getDate("concert_date"));
+                System.out.printf("%-25s", rs.getString("concert_name"));
+                System.out.printf("%-25s", rs.getString("organizer"));
+                System.out.printf("%-25s", rs.getString("ticket_code"));
+                System.out.println();
             }
         } catch (Exception err) {
             System.out.println(err.getMessage());
@@ -98,12 +99,12 @@ public class TicketController {
 
             ResultSet rs = ts.getTicketByIdService(id);
             while(rs.next()) {
-                System.out.printf("%-10s", rs.getString("concert_name"));
-                System.out.printf("%-10s", rs.getString("venue"));
-                System.out.printf("%-10s", rs.getDate("concert_date"));
-                System.out.printf("%-10s", rs.getString("concert_name"));
-                System.out.printf("%-10s", rs.getString("organizer"));
-                System.out.printf("%-10s", rs.getString("ticket_code"));
+                System.out.printf("%-25s", rs.getString("concert_name"));
+                System.out.printf("%-25s", rs.getString("venue"));
+                System.out.printf("%-25s", rs.getDate("concert_date"));
+                System.out.printf("%-25s", rs.getString("concert_name"));
+                System.out.printf("%-25s", rs.getString("organizer"));
+                System.out.printf("%-25s", rs.getString("ticket_code"));
             }
         } catch (Exception err) {
             System.out.println(err.getMessage());
@@ -117,12 +118,13 @@ public class TicketController {
 
             ResultSet rs = ts.getTicketByConcertNameService(concertName);
             while(rs.next()) {
-                System.out.printf("%-10s", rs.getString("concert_name"));
-                System.out.printf("%-10s", rs.getString("venue"));
-                System.out.printf("%-10s", rs.getDate("concert_date"));
-                System.out.printf("%-10s", rs.getString("concert_name"));
-                System.out.printf("%-10s", rs.getString("organizer"));
-                System.out.printf("%-10s", rs.getString("ticket_code"));
+                System.out.printf("%-25s", rs.getString("concert_name"));
+                System.out.printf("%-25s", rs.getString("venue"));
+                System.out.printf("%-25s", rs.getDate("concert_date"));
+                System.out.printf("%-25s", rs.getString("concert_name"));
+                System.out.printf("%-25s", rs.getString("organizer"));
+                System.out.printf("%-25s", rs.getString("ticket_code"));
+                System.out.println();
             }
         } catch (Exception err) {
             System.out.println(err.getMessage());
@@ -136,12 +138,13 @@ public class TicketController {
 
             ResultSet rs = ts.getTicketByDateService(date);
             while(rs.next()) {
-                System.out.printf("%-10s", rs.getString("concert_name"));
-                System.out.printf("%-10s", rs.getString("venue"));
-                System.out.printf("%-10s", rs.getDate("concert_date"));
-                System.out.printf("%-10s", rs.getString("concert_name"));
-                System.out.printf("%-10s", rs.getString("organizer"));
-                System.out.printf("%-10s", rs.getString("ticket_code"));
+                System.out.printf("%-25s", rs.getString("concert_name"));
+                System.out.printf("%-25s", rs.getString("venue"));
+                System.out.printf("%-25s", rs.getDate("concert_date"));
+                System.out.printf("%-25s", rs.getString("concert_name"));
+                System.out.printf("%-25s", rs.getString("organizer"));
+                System.out.printf("%-25s", rs.getString("ticket_code"));
+                System.out.println();;
             }
         } catch (Exception err) {
             System.out.println(err.getMessage());
