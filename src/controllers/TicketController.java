@@ -3,8 +3,9 @@ package controllers;
 import java.sql.ResultSet;
 import java.util.Scanner;
 
+import implementations.TicketControllerImplementation;
 import services.TicketService;
-public class TicketController {
+public class TicketController implements TicketControllerImplementation {
     private final TicketService ts = new TicketService();
     public static void run() {
         Scanner scanner = new Scanner(System.in);

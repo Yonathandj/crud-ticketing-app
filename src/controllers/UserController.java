@@ -1,11 +1,12 @@
 package controllers;
 
+import implementations.UserControllerImplementation;
 import services.UserService;
 
 import java.util.Scanner;
 import java.sql.ResultSet;
 
-public class UserController {
+public class UserController implements UserControllerImplementation {
     private final UserService us = new UserService();
     public static void run() {
         Scanner scanner = new Scanner(System.in);
