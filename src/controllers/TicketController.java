@@ -18,6 +18,7 @@ public class TicketController {
         System.out.println("Get ticket by date   -> (5)");
         System.out.println("Update ticket by id  -> (6)");
         System.out.println("Delete ticket by id  -> (7)");
+        System.out.println("Show the most tickets sold on what date  -> (8)");
 
         int choice = scanner.nextInt();
         scanner.nextLine();
@@ -43,6 +44,9 @@ public class TicketController {
                 break;
             case 7:
                 tc.deleteTicketById(scanner);
+                break;
+            case 8:
+                tc.getDateWithMostSoldTickets();
                 break;
             default:
                 run();
@@ -105,6 +109,7 @@ public class TicketController {
                 System.out.printf("%-25s", rs.getString("concert_name"));
                 System.out.printf("%-25s", rs.getString("organizer"));
                 System.out.printf("%-25s", rs.getString("ticket_code"));
+                System.out.println();
             }
         } catch (Exception err) {
             System.out.println(err.getMessage());
@@ -194,7 +199,21 @@ public class TicketController {
             } else {
                 System.out.println("Delete failed");
             }
+        } catch (Exception err) {
+            System.out.println(err.getMessage());
+        }
+    }
 
+    public void getDateWithMostSoldTickets() {
+        try {
+            ResultSet rs = ts.getDateWithMostSoldTickets();
+
+            System.out.println("Here it is most sold date");
+            while(rs.next()) {
+                System.out.printf("%-25s", rs.getString("transaction_date"));
+                System.out.printf("%-25s", rs.getString("total_sales"));
+                System.out.println();
+            }
         } catch (Exception err) {
             System.out.println(err.getMessage());
         }

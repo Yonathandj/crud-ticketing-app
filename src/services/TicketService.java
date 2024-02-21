@@ -124,4 +124,16 @@ public class TicketService {
             throw new RuntimeException("Something went wrong");
         }
     }
+
+    public ResultSet getDateWithMostSoldTickets() {
+        try(Connection connection = ConnectDatabase.connectDB()) {
+            assert connection != null;
+
+            PreparedStatement ps = connection.prepareStatement("SELECT transaction_date, COUNT(transaction_id) as total_sales FROM transaction_details LEFT JOIN transactions ON transaction_details.transaction_id = transactions.id GROUP BY transaction_date ORDER BY total_sales DESC");
+
+            return ps.executeQuery();
+        } catch (SQLException err) {
+            throw new RuntimeException("Something went wrong");
+        }
+    }
 }
