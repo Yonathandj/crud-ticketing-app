@@ -4,8 +4,6 @@ import connection.ConnectDatabase;
 
 import java.sql.*;
 import java.util.UUID;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class UserService {
     public String addNewUserService(String name, String phoneNumber, String email, String address) {
@@ -13,7 +11,6 @@ public class UserService {
             assert connection != null;
 
             String id = "ticket-" + UUID.randomUUID();
-
             PreparedStatement ps = connection.prepareStatement("INSERT INTO users (id, name, phone_number, email, address) VALUES(?, ? ,?, ?, ?)");
 
             ps.setString(1, id);
@@ -23,11 +20,11 @@ public class UserService {
             ps.setString(6, address);
 
             ps.executeUpdate();
+
             ps.close();
             connection.close();
 
             return id;
-
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
         }
@@ -36,9 +33,16 @@ public class UserService {
     public ResultSet getAllUsers() {
         try(Connection connection = ConnectDatabase.connectDB()) {
             assert connection != null;
+
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM users");
 
-            return ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
+
+            ps.close();
+            rs.close();
+            connection.close();
+
+            return rs;
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
         }
@@ -47,6 +51,7 @@ public class UserService {
     public ResultSet getUserByIdService(String id) {
         try(Connection connection = ConnectDatabase.connectDB()) {
             assert connection != null;
+
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM users WHERE id = ?");
             ps.setString(1, id);
 
@@ -74,7 +79,6 @@ public class UserService {
             connection.close();
 
             return affectedRow;
-
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
         }
@@ -83,10 +87,16 @@ public class UserService {
     public int deleteUserByIdService(String id) {
         try(Connection connection = ConnectDatabase.connectDB()) {
             assert connection != null;
+
             PreparedStatement ps = connection.prepareStatement("DELETE FROM users WHERE id = ?");
             ps.setString(1, id);
 
-            return ps.executeUpdate();
+            int affectedRow = ps.executeUpdate();
+
+            ps.close();
+            connection.close();
+
+            return affectedRow;
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
         }

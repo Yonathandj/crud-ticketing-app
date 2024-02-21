@@ -2,8 +2,8 @@ package controllers;
 
 import services.UserService;
 
-import java.sql.ResultSet;
 import java.util.Scanner;
+import java.sql.ResultSet;
 
 public class UserController {
     private final UserService us = new UserService();
@@ -70,7 +70,7 @@ public class UserController {
             while(rs.next()) {
                 System.out.printf("%-10s", rs.getString("name"));
                 System.out.printf("%-10s", rs.getString("phone_number"));
-                System.out.printf("%-10s", rs.getDate("email"));
+                System.out.printf("%-10s", rs.getString("email"));
                 System.out.printf("%-10s", rs.getString("address"));
             }
         } catch (Exception err) {
@@ -87,7 +87,7 @@ public class UserController {
             while(rs.next()) {
                 System.out.printf("%-10s", rs.getString("name"));
                 System.out.printf("%-10s", rs.getString("phone_number"));
-                System.out.printf("%-10s", rs.getDate("email"));
+                System.out.printf("%-10s", rs.getString("email"));
                 System.out.printf("%-10s", rs.getString("address"));
             }
         } catch (Exception err) {
@@ -111,13 +111,11 @@ public class UserController {
             String address = scanner.nextLine();
 
             int affectedRow = us.updateUserByIdService(id, name, phoneNumber, email, address);
-
             if (affectedRow == 1) {
                 System.out.println("Update success");
             } else {
                 System.out.println("Update failed");
             }
-
         } catch (Exception err) {
             System.out.println(err.getMessage());
         }
