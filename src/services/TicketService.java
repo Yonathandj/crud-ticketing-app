@@ -63,12 +63,19 @@ public class TicketService implements TicketServiceImplementation {
         try(Connection connection = ConnectDatabase.connectDB()) {
             assert connection != null;
 
+            ResultSet rs = checkExistenceTicket(id);
+            if(!rs.next()) {
+                throw new Exception("No id found");
+            }
+
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets WHERE id = ?");
             ps.setString(1, id);
 
             return ps.executeQuery();
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
+        } catch (Exception err) {
+            throw new RuntimeException(err.getMessage());
         }
     }
 
@@ -108,6 +115,11 @@ public class TicketService implements TicketServiceImplementation {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate newDate = LocalDate.parse(date, formatter);
 
+            ResultSet rs = checkExistenceTicket(id);
+            if(!rs.next()) {
+                throw new Exception("No id found");
+            }
+
             PreparedStatement ps = connection.prepareStatement("UPDATE tickets SET concert_name = ?, venue = ?, concert_date = ?, organizer = ?, price = ?, discount = ? WHERE id = ?");
 
             ps.setString(1, concertName);
@@ -121,6 +133,8 @@ public class TicketService implements TicketServiceImplementation {
             return ps.executeUpdate();
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
+        } catch (Exception err) {
+            throw new RuntimeException(err.getMessage());
         }
     }
 
@@ -128,12 +142,19 @@ public class TicketService implements TicketServiceImplementation {
         try(Connection connection = ConnectDatabase.connectDB()) {
             assert connection != null;
 
+            ResultSet rs = checkExistenceTicket(id);
+            if(!rs.next()) {
+                throw new Exception("No id found");
+            }
+
             PreparedStatement ps = connection.prepareStatement("DELETE FROM tickets WHERE id = ?");
             ps.setString(1, id);
 
             return ps.executeUpdate();
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
+        } catch (Exception err) {
+            throw new RuntimeException(err.getMessage());
         }
     }
 
@@ -142,6 +163,19 @@ public class TicketService implements TicketServiceImplementation {
             assert connection != null;
 
             PreparedStatement ps = connection.prepareStatement("SELECT transaction_date, COUNT(transaction_id) as total_sales FROM transaction_details LEFT JOIN transactions ON transaction_details.transaction_id = transactions.id GROUP BY transaction_date ORDER BY total_sales DESC");
+
+            return ps.executeQuery();
+        } catch (SQLException err) {
+            throw new RuntimeException("Something went wrong");
+        }
+    }
+
+    public ResultSet checkExistenceTicket(String id) {
+        try(Connection connection = ConnectDatabase.connectDB()) {
+            assert connection != null;
+
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets WHERE id = ?");
+            ps.setString(1, id);
 
             return ps.executeQuery();
         } catch (SQLException err) {

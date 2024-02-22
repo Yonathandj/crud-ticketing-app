@@ -44,18 +44,30 @@ public class UserService implements UserServiceImplementation {
         try(Connection connection = ConnectDatabase.connectDB()) {
             assert connection != null;
 
+            ResultSet rs = checkExistenceUser(id);
+            if(!rs.next()) {
+                throw new Exception("No id found");
+            }
+
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM users WHERE id = ?");
             ps.setString(1, id);
 
             return ps.executeQuery();
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
+        } catch (Exception err) {
+            throw new RuntimeException(err.getMessage());
         }
     }
 
     public int updateUserByIdService(String id, String name, String phoneNumber, String email, String address) {
         try(Connection connection = ConnectDatabase.connectDB()) {
             assert connection != null;
+
+            ResultSet rs = checkExistenceUser(id);
+            if(!rs.next()) {
+                throw new Exception("No id found");
+            }
 
             PreparedStatement ps = connection.prepareStatement("UPDATE users SET name = ?, phone_number = ?, email = ?, address = ? WHERE id = ?");
             ps.setString(1, name);
@@ -67,6 +79,8 @@ public class UserService implements UserServiceImplementation {
             return ps.executeUpdate();
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
+        } catch (Exception err) {
+            throw new RuntimeException(err.getMessage());
         }
     }
 
@@ -74,10 +88,30 @@ public class UserService implements UserServiceImplementation {
         try(Connection connection = ConnectDatabase.connectDB()) {
             assert connection != null;
 
+            ResultSet rs = checkExistenceUser(id);
+            if(!rs.next()) {
+                throw new Exception("No id found");
+            }
+
             PreparedStatement ps = connection.prepareStatement("DELETE FROM users WHERE id = ?");
             ps.setString(1, id);
 
             return ps.executeUpdate();
+        } catch (SQLException err) {
+            throw new RuntimeException("Something went wrong");
+        } catch (Exception err) {
+            throw new RuntimeException(err.getMessage());
+        }
+    }
+
+    public ResultSet checkExistenceUser(String id) {
+        try(Connection connection = ConnectDatabase.connectDB()) {
+            assert connection != null;
+
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM users WHERE id = ?");
+            ps.setString(1, id);
+
+            return ps.executeQuery();
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
         }
