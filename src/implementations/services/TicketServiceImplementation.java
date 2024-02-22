@@ -11,4 +11,5 @@ public interface TicketServiceImplementation {
     public int updateTicketService(String id, String concertName, String venue, String date, String organizer, double price, double discount);
     public int deleteTicketByIdService(String id);
     public ResultSet getDateWithMostSoldTickets();
+    public ResultSet checkExistenceTicket(String id);
 }

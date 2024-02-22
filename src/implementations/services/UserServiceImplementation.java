@@ -8,4 +8,5 @@ public interface UserServiceImplementation {
     public ResultSet getUserByIdService(String id);
     public int updateUserByIdService(String id, String name, String phoneNumber, String email, String address);
     public int deleteUserByIdService(String id);
+    public ResultSet checkExistenceUser(String id);
 }
