@@ -1,3 +1,3 @@
 1. VALIDATION INPUT USER
 2. CHECK IF ID IS EXIST IN DATABASE
-3. 
+3. HANDLE transactions and transaction_details

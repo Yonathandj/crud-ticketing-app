@@ -16,6 +16,8 @@ public class TicketService implements TicketServiceImplementation {
         try(Connection connection = ConnectDatabase.connectDB()) {
             assert connection != null;
 
+            connection.setAutoCommit(false);
+
             String ticketId = "ticket-" + UUID.randomUUID();
             String ticketCode = "ticket-code-" + UUID.randomUUID();
 
@@ -33,9 +35,14 @@ public class TicketService implements TicketServiceImplementation {
             ps.setDouble(7, price);
             ps.setDouble(8, discount);
 
-            ps.executeUpdate();
-
-            return ticketId;
+            int affectedRow = ps.executeUpdate();
+            if(affectedRow == 1) {
+                connection.commit();
+                return ticketId;
+            } else {
+                connection.rollback();
+                return null;
+            }
         } catch (SQLException err) {
             throw new RuntimeException("Something went wrong");
         }
