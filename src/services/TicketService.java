@@ -1,185 +1,227 @@
 package services;
 
-import connection.ConnectDatabase;
-import implementations.services.TicketServiceImplementation;
+import java.sql.ResultSet;
+import java.util.Scanner;
 
-import java.sql.*;
-import java.util.UUID;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import implementations.services.TicketServiceImplementation;
+import repositories.TicketRepository;
 
 public class TicketService implements TicketServiceImplementation {
+    private final TicketRepository ts = new TicketRepository();
+
     public TicketService() {
     }
 
-    public String addNewTicketService(String concertName, String venue, String date, String organizer, double price, double discount) {
-        try(Connection connection = ConnectDatabase.connectDB()) {
-            assert connection != null;
+    public static void run() {
+        Scanner scanner = new Scanner(System.in);
+        TicketService tc = new TicketService();
 
-            connection.setAutoCommit(false);
+        System.out.println("===========================");
+        System.out.println("Add new ticket       -> (1)");
+        System.out.println("Get all tickets      -> (2)");
+        System.out.println("Get ticket by id     -> (3)");
+        System.out.println("Get ticket by concert name  -> (4)");
+        System.out.println("Get ticket by date   -> (5)");
+        System.out.println("Update ticket by id  -> (6)");
+        System.out.println("Delete ticket by id  -> (7)");
+        System.out.println("Show the most tickets sold on what date  -> (8)");
 
-            String ticketId = "ticket-" + UUID.randomUUID();
-            String ticketCode = "ticket-code-" + UUID.randomUUID();
+        int choice = scanner.nextInt();
+        scanner.nextLine();
 
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO tickets (id, concert_name, venue, concert_date, organizer, ticket_code, price, discount) VALUES(?, ? ,? ,? , ?, ? ,? ,?)");
+        switch (choice) {
+            case 1:
+                tc.postNewTicket(scanner);
+                break;
+            case 2:
+                tc.getAllTickets();
+                break;
+            case 3:
+                tc.getTicketById(scanner);
+                break;
+            case 4:
+                tc.getTicketByConcertName(scanner);
+                break;
+            case 5:
+                tc.getTicketByDate(scanner);
+                break;
+            case 6:
+                tc.putTicketById(scanner);
+                break;
+            case 7:
+                tc.deleteTicketById(scanner);
+                break;
+            case 8:
+                tc.getDateWithMostSoldTickets();
+                break;
+            default:
+                run();
+        }
+    }
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate newDate = LocalDate.parse(date, formatter);
+    public void postNewTicket(Scanner scanner) {
+        try {
+            System.out.println("Enter new ticket information");
+            System.out.println("1. Concert name");
+            System.out.println("2. Venue");
+            System.out.println("3. Date");
+            System.out.println("4. Organizer");
+            System.out.println("5. Price");
+            System.out.println("6. Discount");
 
-            ps.setString(1, ticketId);
-            ps.setString(2, concertName);
-            ps.setString(3, venue);
-            ps.setDate(4, Date.valueOf(newDate));
-            ps.setString(5, organizer);
-            ps.setString(6, ticketCode);
-            ps.setDouble(7, price);
-            ps.setDouble(8, discount);
+            String concertName = scanner.nextLine();
+            String venue = scanner.nextLine();
+            String date = scanner.nextLine();
+            String organizer = scanner.nextLine();
+            double price = scanner.nextDouble();
+            double discount = scanner.nextDouble();
 
-            int affectedRow = ps.executeUpdate();
-            if(affectedRow == 1) {
-                connection.commit();
-                return ticketId;
+            String result = ts.addNewTicketService(concertName, venue, date, organizer, price, discount);
+
+            System.out.println("Use this id if you want to get the information of this ticket : ");
+            System.out.println(result);
+        } catch (Exception err) {
+            System.out.println(err.getMessage());
+        }
+    }
+
+    public void getAllTickets() {
+        try {
+            ResultSet rs = ts.getAllTicketsService();
+            while(rs.next()) {
+                System.out.printf("%-25s", rs.getString("concert_name"));
+                System.out.printf("%-25s", rs.getString("venue"));
+                System.out.printf("%-25s", rs.getDate("concert_date"));
+                System.out.printf("%-25s", rs.getString("concert_name"));
+                System.out.printf("%-25s", rs.getString("organizer"));
+                System.out.printf("%-25s", rs.getString("ticket_code"));
+                System.out.println();
+            }
+        } catch (Exception err) {
+            System.out.println(err.getMessage());
+        }
+    }
+
+    public void getTicketById(Scanner scanner) {
+        try {
+            System.out.println("Enter the ticket id");
+            String id = scanner.nextLine();
+
+            ResultSet rs = ts.getTicketByIdService(id);
+            while(rs.next()) {
+                System.out.printf("%-25s", rs.getString("concert_name"));
+                System.out.printf("%-25s", rs.getString("venue"));
+                System.out.printf("%-25s", rs.getDate("concert_date"));
+                System.out.printf("%-25s", rs.getString("concert_name"));
+                System.out.printf("%-25s", rs.getString("organizer"));
+                System.out.printf("%-25s", rs.getString("ticket_code"));
+                System.out.println();
+            }
+        } catch (Exception err) {
+            System.out.println(err.getMessage());
+        }
+    }
+
+    public void getTicketByConcertName(Scanner scanner) {
+        try {
+            System.out.println("Enter the concert name");
+            String concertName = scanner.nextLine();
+
+            ResultSet rs = ts.getTicketByConcertNameService(concertName);
+            while(rs.next()) {
+                System.out.printf("%-25s", rs.getString("concert_name"));
+                System.out.printf("%-25s", rs.getString("venue"));
+                System.out.printf("%-25s", rs.getDate("concert_date"));
+                System.out.printf("%-25s", rs.getString("concert_name"));
+                System.out.printf("%-25s", rs.getString("organizer"));
+                System.out.printf("%-25s", rs.getString("ticket_code"));
+                System.out.println();
+            }
+        } catch (Exception err) {
+            System.out.println(err.getMessage());
+        }
+    }
+
+    public void getTicketByDate(Scanner scanner) {
+        try {
+            System.out.println("Enter the ticket date");
+            String date = scanner.nextLine();
+
+            ResultSet rs = ts.getTicketByDateService(date);
+            while(rs.next()) {
+                System.out.printf("%-25s", rs.getString("concert_name"));
+                System.out.printf("%-25s", rs.getString("venue"));
+                System.out.printf("%-25s", rs.getDate("concert_date"));
+                System.out.printf("%-25s", rs.getString("concert_name"));
+                System.out.printf("%-25s", rs.getString("organizer"));
+                System.out.printf("%-25s", rs.getString("ticket_code"));
+                System.out.println();;
+            }
+        } catch (Exception err) {
+            System.out.println(err.getMessage());
+        }
+    }
+
+    public void putTicketById(Scanner scanner) {
+        try {
+            System.out.println("Enter ticket information for update");
+            System.out.println("1. id ticket");
+            System.out.println("2. Concert name");
+            System.out.println("3. Venue");
+            System.out.println("4. Date");
+            System.out.println("5. Organizer");
+            System.out.println("6. Price");
+            System.out.println("7. Discount");
+
+            String id = scanner.nextLine();
+            String concertName = scanner.nextLine();
+            String venue = scanner.nextLine();
+            String date = scanner.nextLine();
+            String organizer = scanner.nextLine();
+            double price = scanner.nextDouble();
+            double discount = scanner.nextDouble();
+
+            int affectedRow = ts.updateTicketService(id, concertName, venue, date, organizer, price, discount);
+
+            if (affectedRow == 1) {
+                System.out.println("Update success");
             } else {
-                connection.rollback();
-                return null;
-            }
-        } catch (SQLException err) {
-            throw new RuntimeException("Something went wrong");
-        }
-    }
-
-    public ResultSet getAllTicketsService() {
-        try(Connection connection = ConnectDatabase.connectDB()) {
-            assert connection != null;
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets");
-
-            return ps.executeQuery();
-        } catch (SQLException err) {
-            throw new RuntimeException("Something went wrong");
-        }
-    }
-
-    public ResultSet getTicketByIdService(String id) {
-        try(Connection connection = ConnectDatabase.connectDB()) {
-            assert connection != null;
-
-            ResultSet rs = checkExistenceTicket(id);
-            if(!rs.next()) {
-                throw new Exception("No id found");
+                System.out.println("Update failed");
             }
 
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets WHERE id = ?");
-            ps.setString(1, id);
-
-            return ps.executeQuery();
-        } catch (SQLException err) {
-            throw new RuntimeException("Something went wrong");
         } catch (Exception err) {
-            throw new RuntimeException(err.getMessage());
+            System.out.println(err.getMessage());
         }
     }
 
-    public ResultSet getTicketByConcertNameService(String concertName) {
-        try(Connection connection = ConnectDatabase.connectDB()) {
-            assert connection != null;
+    public void deleteTicketById(Scanner scanner) {
+        try {
+            System.out.println("Enter the ticket id");
+            String id = scanner.nextLine();
 
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets WHERE concert_name = ?");
-            ps.setString(1, concertName);
-
-            return ps.executeQuery();
-        } catch (SQLException err) {
-            throw new RuntimeException("Something went wrong");
-        }
-    }
-
-    public ResultSet getTicketByDateService(String date) {
-        try(Connection connection = ConnectDatabase.connectDB()) {
-            assert connection != null;
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate newDate = LocalDate.parse(date, formatter);
-
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets WHERE concert_date = ?");
-            ps.setDate(1, Date.valueOf(newDate));
-
-            return ps.executeQuery();
-        } catch (SQLException err) {
-            throw new RuntimeException("Something went wrong");
-        }
-    }
-
-    public int updateTicketService(String id, String concertName, String venue, String date, String organizer, double price, double discount) {
-        try(Connection connection = ConnectDatabase.connectDB()) {
-            assert connection != null;
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate newDate = LocalDate.parse(date, formatter);
-
-            ResultSet rs = checkExistenceTicket(id);
-            if(!rs.next()) {
-                throw new Exception("No id found");
+            int affectedRow = ts.deleteTicketByIdService(id);
+            if (affectedRow == 1) {
+                System.out.println("Delete success");
+            } else {
+                System.out.println("Delete failed");
             }
-
-            PreparedStatement ps = connection.prepareStatement("UPDATE tickets SET concert_name = ?, venue = ?, concert_date = ?, organizer = ?, price = ?, discount = ? WHERE id = ?");
-
-            ps.setString(1, concertName);
-            ps.setString(2, venue);
-            ps.setDate(3, Date.valueOf(newDate));
-            ps.setString(4, organizer);
-            ps.setDouble(5, price);
-            ps.setDouble(6, discount);
-            ps.setString(7, id);
-
-            return ps.executeUpdate();
-        } catch (SQLException err) {
-            throw new RuntimeException("Something went wrong");
         } catch (Exception err) {
-            throw new RuntimeException(err.getMessage());
+            System.out.println(err.getMessage());
         }
     }
 
-    public int deleteTicketByIdService(String id) {
-        try(Connection connection = ConnectDatabase.connectDB()) {
-            assert connection != null;
+    public void getDateWithMostSoldTickets() {
+        try {
+            ResultSet rs = ts.getDateWithMostSoldTickets();
 
-            ResultSet rs = checkExistenceTicket(id);
-            if(!rs.next()) {
-                throw new Exception("No id found");
+            System.out.println("Here it is most sold date");
+            while(rs.next()) {
+                System.out.printf("%-25s", rs.getString("transaction_date"));
+                System.out.printf("%-25s", rs.getString("total_sales"));
+                System.out.println();
             }
-
-            PreparedStatement ps = connection.prepareStatement("DELETE FROM tickets WHERE id = ?");
-            ps.setString(1, id);
-
-            return ps.executeUpdate();
-        } catch (SQLException err) {
-            throw new RuntimeException("Something went wrong");
         } catch (Exception err) {
-            throw new RuntimeException(err.getMessage());
-        }
-    }
-
-    public ResultSet getDateWithMostSoldTickets() {
-        try(Connection connection = ConnectDatabase.connectDB()) {
-            assert connection != null;
-
-            PreparedStatement ps = connection.prepareStatement("SELECT transaction_date, COUNT(transaction_id) as total_sales FROM transaction_details LEFT JOIN transactions ON transaction_details.transaction_id = transactions.id GROUP BY transaction_date ORDER BY total_sales DESC");
-
-            return ps.executeQuery();
-        } catch (SQLException err) {
-            throw new RuntimeException("Something went wrong");
-        }
-    }
-
-    public ResultSet checkExistenceTicket(String id) {
-        try(Connection connection = ConnectDatabase.connectDB()) {
-            assert connection != null;
-
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM tickets WHERE id = ?");
-            ps.setString(1, id);
-
-            return ps.executeQuery();
-        } catch (SQLException err) {
-            throw new RuntimeException("Something went wrong");
+            System.out.println(err.getMessage());
         }
     }
 }

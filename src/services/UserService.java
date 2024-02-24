@@ -1,119 +1,148 @@
 package services;
 
-import connection.ConnectDatabase;
 import implementations.services.UserServiceImplementation;
+import repositories.UserRepository;
 
-import java.sql.*;
-import java.util.UUID;
+import java.util.Scanner;
+import java.sql.ResultSet;
 
 public class UserService implements UserServiceImplementation {
+    private final UserRepository us = new UserRepository();
+
     public UserService() {
     }
 
-    public String addNewUserService(String name, String phoneNumber, String email, String address) {
-        try(Connection connection = ConnectDatabase.connectDB()) {
-            assert connection != null;
+    public static void run() {
+        Scanner scanner = new Scanner(System.in);
+        UserService uc = new UserService();
 
-            String id = "user-" + UUID.randomUUID();
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO users (id, name, phone_number, email, address) VALUES(?, ? ,?, ?, ?)");
-            ps.setString(1, id);
-            ps.setString(2, name);
-            ps.setString(3, phoneNumber);
-            ps.setString(4, email);
-            ps.setString(5, address);
-            ps.executeUpdate();
+        System.out.println("==========================");
+        System.out.println("Add new user        -> (1)");
+        System.out.println("Get all users       -> (2)");
+        System.out.println("Get user by id      -> (3)");
+        System.out.println("Update user by id   -> (4)");
+        System.out.println("Delete user by id   -> (5)");
 
-            return id;
-        } catch (SQLException err) {
-            throw new RuntimeException("Something went wrong");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (choice) {
+            case 1:
+                uc.postNewUser(scanner);
+                break;
+            case 2:
+                uc.getAllUsers();
+                break;
+            case 3:
+                uc.getUserById(scanner);
+                break;
+            case 4:
+                uc.putUserById(scanner);
+                break;
+            case 5:
+                uc.deleteUserById(scanner);
+                break;
+            default:
+                run();
         }
     }
 
-    public ResultSet getAllUsersService() {
-        try(Connection connection = ConnectDatabase.connectDB()) {
-            assert connection != null;
+    public void postNewUser(Scanner scanner) {
+        try {
+            System.out.println("Enter new user information");
+            System.out.println("1. Name");
+            System.out.println("2. Phone number");
+            System.out.println("3. Email");
+            System.out.println("4. Address");
 
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM users");
-            return ps.executeQuery();
-        } catch (SQLException err) {
-            throw new RuntimeException("Something went wrong");
-        }
-    }
+            String name = scanner.nextLine();
+            String phoneNumber = scanner.nextLine();
+            String email = scanner.nextLine();
+            String address = scanner.nextLine();
 
-    public ResultSet getUserByIdService(String id) {
-        try(Connection connection = ConnectDatabase.connectDB()) {
-            assert connection != null;
+            String result = us.addNewUserService(name, phoneNumber, email, address);
 
-            ResultSet rs = checkExistenceUser(id);
-            if(!rs.next()) {
-                throw new Exception("No id found");
-            }
-
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM users WHERE id = ?");
-            ps.setString(1, id);
-
-            return ps.executeQuery();
-        } catch (SQLException err) {
-            throw new RuntimeException("Something went wrong");
+            System.out.println("Use this id if you want to get the information of this user : ");
+            System.out.println(result);
         } catch (Exception err) {
-            throw new RuntimeException(err.getMessage());
+            System.out.println(err.getMessage());
         }
     }
 
-    public int updateUserByIdService(String id, String name, String phoneNumber, String email, String address) {
-        try(Connection connection = ConnectDatabase.connectDB()) {
-            assert connection != null;
-
-            ResultSet rs = checkExistenceUser(id);
-            if(!rs.next()) {
-                throw new Exception("No id found");
+    public void getAllUsers() {
+        try {
+            ResultSet rs = us.getAllUsersService();
+            while(rs.next()) {
+                System.out.printf("%-25s", rs.getString("name"));
+                System.out.printf("%-25s", rs.getString("phone_number"));
+                System.out.printf("%-25s", rs.getString("email"));
+                System.out.printf("%-25s", rs.getString("address"));
+                System.out.println();
             }
-
-            PreparedStatement ps = connection.prepareStatement("UPDATE users SET name = ?, phone_number = ?, email = ?, address = ? WHERE id = ?");
-            ps.setString(1, name);
-            ps.setString(2, phoneNumber);
-            ps.setString(3, email);
-            ps.setString(4, address);
-            ps.setString(5, id);
-
-            return ps.executeUpdate();
-        } catch (SQLException err) {
-            throw new RuntimeException("Something went wrong");
         } catch (Exception err) {
-            throw new RuntimeException(err.getMessage());
+            System.out.println(err.getMessage());
         }
     }
 
-    public int deleteUserByIdService(String id) {
-        try(Connection connection = ConnectDatabase.connectDB()) {
-            assert connection != null;
+    public void getUserById(Scanner scanner) {
+        try {
+            System.out.println("Enter the user id");
+            String id = scanner.nextLine();
 
-            ResultSet rs = checkExistenceUser(id);
-            if(!rs.next()) {
-                throw new Exception("No id found");
+            ResultSet rs = us.getUserByIdService(id);
+            while(rs.next()) {
+                System.out.printf("%-25s", rs.getString("name"));
+                System.out.printf("%-25s", rs.getString("phone_number"));
+                System.out.printf("%-25s", rs.getString("email"));
+                System.out.printf("%-25s", rs.getString("address"));
+                System.out.println();
             }
-
-            PreparedStatement ps = connection.prepareStatement("DELETE FROM users WHERE id = ?");
-            ps.setString(1, id);
-
-            return ps.executeUpdate();
-        } catch (SQLException err) {
-            throw new RuntimeException("Something went wrong");
         } catch (Exception err) {
-            throw new RuntimeException(err.getMessage());
+            System.out.println(err.getMessage());
         }
     }
 
-    public ResultSet checkExistenceUser(String id) {
-        try(Connection connection = ConnectDatabase.connectDB()) {
-            assert connection != null;
+    public void putUserById(Scanner scanner) {
+        try {
+            System.out.println("Enter user information for update");
+            System.out.println("1. Id user");
+            System.out.println("2. Name");
+            System.out.println("3. Phone number");
+            System.out.println("4. Email");
+            System.out.println("5. Address");
 
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM users WHERE id = ?");
-            ps.setString(1, id);
+            String id = scanner.nextLine();
+            String name = scanner.nextLine();
+            String phoneNumber = scanner.nextLine();
+            String email = scanner.nextLine();
+            String address = scanner.nextLine();
 
-            return ps.executeQuery();
-        } catch (SQLException err) {
-            throw new RuntimeException("Something went wrong");
+            int affectedRow = us.updateUserByIdService(id, name, phoneNumber, email, address);
+            if (affectedRow == 1) {
+                System.out.println("Update success");
+            } else {
+                System.out.println("Update failed");
+            }
+        } catch (Exception err) {
+            System.out.println(err.getMessage());
+        }
+    }
+
+    public void deleteUserById(Scanner scanner) {
+        {
+            try {
+                System.out.println("Enter the user id");
+                String id = scanner.nextLine();
+
+                int affectedRow = us.deleteUserByIdService(id);
+                if (affectedRow == 1) {
+                    System.out.println("Delete success");
+                } else {
+                    System.out.println("Delete failed");
+                }
+            } catch (Exception err) {
+                System.out.println(err.getMessage());
+            }
         }
     }
 }

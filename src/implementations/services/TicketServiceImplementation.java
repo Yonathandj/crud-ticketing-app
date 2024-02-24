@@ -1,15 +1,14 @@
 package implementations.services;
 
-import java.sql.ResultSet;
+import java.util.Scanner;
 
 public interface TicketServiceImplementation {
-    public String addNewTicketService(String concertName, String venue, String date, String organizer, double price, double discount);
-    public ResultSet getAllTicketsService();
-    public ResultSet getTicketByIdService(String id);
-    public ResultSet getTicketByConcertNameService(String concertName);
-    public ResultSet getTicketByDateService(String date);
-    public int updateTicketService(String id, String concertName, String venue, String date, String organizer, double price, double discount);
-    public int deleteTicketByIdService(String id);
-    public ResultSet getDateWithMostSoldTickets();
-    public ResultSet checkExistenceTicket(String id);
+    public void postNewTicket(Scanner scanner);
+    public void getAllTickets();
+    public void getTicketById(Scanner scanner);
+    public void getTicketByConcertName(Scanner scanner);
+    public void getTicketByDate(Scanner scanner);
+    public void putTicketById(Scanner scanner);
+    public void deleteTicketById(Scanner scanner);
+    public void getDateWithMostSoldTickets();
 }
